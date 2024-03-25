@@ -35,6 +35,7 @@ const App2 = () => {
         console.log(roomName)
         socket.emit("join-room", roomName);
         setRoomName(roomName);
+        setButtonClicked(true);
     };
 
     useEffect(() => {
@@ -58,72 +59,89 @@ const App2 = () => {
         };
     }, []);
 
+    // for element loading handling
+    const [buttonClicked, setButtonClicked] = useState(false);
+
+
     return (
-        <> 
-        <div className="max-w-md mx-auto ">
+        <>
+            <div className="flex  justify-center align-middle">
 
-       
-         
-            <button className="btn" onClick={() => document.getElementById('my_modal_1').showModal()}>Join or Create room</button>
-            <dialog id="my_modal_1" className="modal">
-                <div className="modal-box">
-                    <input type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        placeholder="Enter Username"
-                        className="input w-full max-w-xs"
-                        required />
-                    <input type="text"
-                        value={roomName}
-                        onChange={(e) => setRoomName(e.target.value)}
-                        placeholder="Type here"
-                        className="input w-full max-w-xs"
-                        required />
+                {!buttonClicked && <div id='modal section' className="mx-32 my-32 ">
 
-                    <div className="modal-action">
-                        <form method="dialog">
+                    <button className="btn" onClick={() => document.getElementById('my_modal_1').showModal()}>Join or Create room</button>
+                    <dialog id="my_modal_1" className="modal">
+                        <div className="modal-box">
+                            <input type="text"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                placeholder="Enter Username"
+                                className="input w-full max-w-xs"
+                                required />
+                            <input type="text"
+                                value={roomName}
+                                onChange={(e) => setRoomName(e.target.value)}
+                                placeholder="Type here"
+                                className="input w-full max-w-xs"
+                                required />
 
-                            <button
-                                onClick={joinRoomHandler}
-                                className="btn">
-                                Join Room</button>
-                        </form>
-                    </div>
-                </div>
-            </dialog>
-            <div className="flex flex-row">
+                            <div className="modal-action">
+                                <form method="dialog">
 
-                <input type="text"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Enter Message"
-                    className="input input-bordered w-full max-w-xl" />
-                <button
-                    onClick={handleSubmit}
-                    type="submit"
-                    className="btn">Send</button>
-            </div>
+                                    <button
+                                        onClick={joinRoomHandler}
 
-
-
-
-            {messages.map((data, i) => (
-                <div key={i}>
-                    <div className={data.username === username ? "chat chat-end" : "chat chat-start"}>
-                        <div className="chat-image avatar">
-                            <div className="w-10 rounded-full">
-                                <img alt="Tailwind CSS chat bubble component" src={avatar} />
+                                        className="btn">
+                                        Join Room</button>
+                                </form>
                             </div>
                         </div>
-                        <div className="chat-header">
-                            {data.username}
-                        </div>
-                        <div className="chat-bubble">{data.message}</div>
-                    </div>
-                </div>
-            ))}
+                    </dialog>
+                </div>}
+            </div>
+            <div className="max-w-md mx-auto ">
 
-        </div>
+
+
+                {buttonClicked && <div id='msg section' className="my-3">
+
+
+                    <div className="flex flex-row">
+
+                        <input type="text"
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            placeholder="Enter Message"
+                            className="input input-bordered w-full max-w-xl" />
+                        <button
+                            onClick={handleSubmit}
+                            type="submit"
+                            className="btn mx-3">Send</button>
+                    </div>
+
+
+
+
+                    {messages.map((data, i) => (
+                        <div key={i}>
+                            <div className={data.username === username ? "chat chat-end" : "chat chat-start"}>
+                                <div className="chat-image avatar">
+                                    <div className="w-10 rounded-full">
+                                        <img alt="Tailwind CSS chat bubble component" src={avatar} />
+                                    </div>
+                                </div>
+                                <div className="chat-header">
+                                    {data.username}
+                                </div>
+                                <div className="chat-bubble">{data.message}</div>
+                            </div>
+                        </div>
+                    ))}
+                </div>}
+
+
+
+            </div>
 
         </>
     );

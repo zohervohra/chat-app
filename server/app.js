@@ -30,39 +30,39 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.get("/login", (req, res) => {
-  const token = jwt.sign({ _id: "asdasjdhkasdasdas" }, secretKeyJWT);
+// app.get("/login", (req, res) => {
+//   const token = jwt.sign({ _id: "asdasjdhkasdasdas" }, secretKeyJWT);
 
-  res
-    .cookie("token", token, { httpOnly: true, secure: true, sameSite: "none" })
-    .json({
-      message: "Login Success",
-    });
-});
+//   res
+//     .cookie("token", token, { httpOnly: true, secure: true, sameSite: "none" })
+//     .json({
+//       message: "Login Success",
+//     });
+// });
 
-io.use((socket, next) => {
-  cookieParser()(socket.request, socket.request.res, (err) => {
-    if (err) return next(err);
+// io.use((socket, next) => {
+//   cookieParser()(socket.request, socket.request.res, (err) => {
+//     if (err) return next(err);
 
-    const token = socket.request.cookies.token;
-    if (!token) return next(new Error("Authentication Error"));
+//     const token = socket.request.cookies.token;
+//     if (!token) return next(new Error("Authentication Error"));
 
-    const decoded = jwt.verify(token, secretKeyJWT);
-    next();
-  });
-});
+//     const decoded = jwt.verify(token, secretKeyJWT);
+//     next();
+//   });
+// });
 
 io.on("connection", (socket) => {
   console.log("User Connected", socket.id);
 
-  socket.on("message", ({ room, message }) => {
-    console.log({ room, message });
-    socket.to(room).emit("receive-message", message);
+  socket.on("message", ({ roomName, message  , username }) => {
+    console.log({ roomName, message , username });
+    socket.to(roomName).emit("receive-message", {message , username});
   });
 
-  socket.on("join-room", (room) => {
-    socket.join(room);
-    console.log(`User joined room ${room}`);
+  socket.on("join-room", (roomName) => {
+    socket.join(roomName);
+    console.log(`User  joined room ${roomName}`);
   });
 
   socket.on("disconnect", () => {
